@@ -19,6 +19,8 @@ for j in pid:
     if cmd is not 0:
         print (cmd[0:cmd.find("--")], j)
 
+
+
 def status(pid, dic={}):
     file = "/proc/"+str(pid)+"/status"
     with open(file) as status:
@@ -28,4 +30,6 @@ def status(pid, dic={}):
         dic[key] = {"value":value.strip()}
     return dic
 
-print (status(1))
+for pid in psutil.pids():
+    dict = status(pid)
+    print(test, dict["Name"], dict["Umask"])
