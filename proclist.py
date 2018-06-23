@@ -13,23 +13,18 @@ def read_cmdline(file):
         return 0
     else:
         return beta
-
-for j in pid:
-    cmd = read_cmdline("/proc/" + str(j) + "/cmdline")
-    if cmd is not 0:
-        print (cmd[0:cmd.find("--")], j)
-
-
-
 def status(pid, dic={}):
     file = "/proc/"+str(pid)+"/status"
+    cmd = read_cmdline("/proc/" + str(pid) + "/cmdline")
+    if cmd is not 0:
+        cmd = cmd[0:cmd.find("--")]
     with open(file) as status:
         beta = status.read()
     for j in beta.splitlines():
         key, value = j.split("\t")[0][0:-1], j.split("\t")[1]
-        dic[key] = {"value":value.strip()}
+        dic[key] = {"cmd":cmd, "value":value.strip()}
     return dic
 
 for pid in psutil.pids():
     dict = status(pid)
-    print(test, dict["Name"], dict["Umask"])
+    print(pid, dict["cmd"], dict["Name"]["value"], dict["Umask"]["value"])
